@@ -9,7 +9,10 @@
   when: al_agent_registration_key is defined and al_agent_registration_key != "your_registration_key_here"
 
 - name: Provision Alert Logic Agent
-  command: "/etc/init.d/al-agent provision {{ al_agent_provision_options | join(' ') }}"
+  # KLUDGE: Could not make the role work unless the registration key is passed to the command.
+  # The "set_fact" task above does not seem to work as expected.
+  #command: "/etc/init.d/al-agent provision {{ al_agent_provision_options | join(' ') }}"
+  command: "/etc/init.d/al-agent provision --key '{{ al_agent_registration_key }}'"
   notify:
     - restart al-agent
   tags: provision_al_agent
